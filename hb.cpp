@@ -5,105 +5,124 @@ using namespace std;
 
 #define MAX 999
 
-struct Cond
+struct Num
 {
-    int estimate;
-    int hit, brow;
+    int d1, d2, d3;
+
+    bool or_equal() const
+    {
+        return (d1 == d2 || d2 == d3 || d3 == d1);
+    }
+
+    bool valid() const
+    {
+        bool c1 = (0 <= d1 && d1 <= 9);
+        bool c2 = (0 <= d2 && d2 <= 9);
+        bool c3 = (0 <= d3 && d3 <= 9);
+        return c1 && c2 && c3 && !or_equal();
+    }
+
+    int hit(const Num &guess) const
+    {
+        int cnt = 0;
+        if (d1 == guess.d1)
+            cnt++;
+        if (d2 == guess.d2)
+            cnt++;
+        if (d3 == guess.d3)
+            cnt++;
+        return cnt;
+    }
+
+    int brow(const Num &guess) const
+    {
+        int cnt = 0;
+        if (d1 == guess.d2 || d1 == guess.d3)
+            cnt++;
+        if (d2 == guess.d1 || d2 == guess.d3)
+            cnt++;
+        if (d3 == guess.d1 || d3 == guess.d2)
+            cnt++;
+        return cnt;
+    }
 };
 
-Cond NewCond(int e, int h, int b)
+Num toNum(int n)
+{
+    Num num;
+    num.d1 = n / 100;
+    num.d2 = (n / 10) % 10;
+    num.d3 = n % 10;
+    return num;
+}
+
+int toInt(const Num &num)
+{
+    return num.d1 * 100 + num.d2 * 10 + num.d3;
+}
+
+struct Cond
+{
+    Num guess;
+    int hit, brow;
+
+    bool valid() const
+    {
+        bool h = (0 <= hit && hit <= 3);
+        bool b = (0 <= brow && brow <= 3);
+        return h && b;
+    }
+};
+
+Cond newCond(Num guess, int hit, int brow)
 {
     Cond c;
-    c.estimate = e;
-    c.hit = h;
-    c.brow = b;
+    c.guess = guess;
+    c.hit = hit;
+    c.brow = brow;
     return c;
 }
 
-bool or_equal(int real)
+bool filter(const Num &n, Cond c)
 {
-    int a, b, c; // 1, 2, 3桁目の数字
-    a = real / 100;
-    b = (real / 10) % 10;
-    c = real % 10;
+    Num g = c.guess;
+    if (!g.valid())
+        return false;
 
-    return (a == b || b == c || c == a);
+    bool b1 = (c.hit == n.hit(g));
+    bool b2 = (c.brow == n.brow(g));
+    return b1 && b2;
 }
 
-int hit(int real, int esti)
-{
-    int a, b, c; // 1, 2, 3桁目の数字
-    a = real / 100;
-    b = (real / 10) % 10;
-    c = real % 10;
-
-    int x, y, z; // 1, 2, 3桁目の数字
-    x = esti / 100;
-    y = (esti / 10) % 10;
-    z = esti % 10;
-
-    int cnt = 0;
-    if (a == x)
-        cnt++;
-    if (b == y)
-        cnt++;
-    if (c == z)
-        cnt++;
-
-    return cnt;
-}
-
-int brow(int real, int esti)
-{
-    int a, b, c; // 1, 2, 3桁目の数字
-    a = real / 100;
-    b = (real / 10) % 10;
-    c = real % 10;
-
-    int x, y, z; // 1, 2, 3桁目の数字
-    x = esti / 100;
-    y = (esti / 10) % 10;
-    z = esti % 10;
-
-    int cnt = 0;
-    if (a == y || a == z)
-        cnt++;
-    if (b == x || b == z)
-        cnt++;
-    if (c == x || c == y)
-        cnt++;
-
-    return cnt;
-}
-
-bool filter(int n, Cond c)
-{
-    bool b1 = hit(n, c.estimate) == c.hit;
-    bool b2 = brow(n, c.estimate) == c.brow;
-    bool b3 = !or_equal(n);
-    return b1 && b2 && b3;
-}
-
-void print(vector<int> nums)
+void print(const vector<Num> &nums)
 {
     int n = nums.size();
     for (int i = 0; i < n; i++)
     {
-        cout << nums[i] << ",";
+        cout << toInt(nums[i]) << ",";
     }
 }
 
-void candidate(vector<int> &cand, vector<int> &newCand)
+void candidate(const vector<Num> &cand, vector<Num> &newCand)
 {
+start:
+
     cout << "please input:\n";
     cout << "format: 'guess hit brow'\n";
 
-    int e, h, b;
-    cin >> e >> h >> b;
-    Cond c = NewCond(e, h, b);
+    int g, h, b;
+    cin >> g >> h >> b;
+
+    Num guess = toNum(g);
+    if (!guess.valid())
+    {
+        cout << "invalid guess format.\n\n";
+        goto start;
+    }
+    Cond c = newCond(guess, h, b);
 
     // gather candidates
-    for (int i : cand)
+    for (const Num &i : cand)
         if (filter(i, c))
             newCand.push_back(i);
 
@@ -155,10 +174,10 @@ int estimate(vector<int> &cands)
 }
 */
 
-void cp(vector<int> &src, vector<int> &dst)
+void cp(const vector<Num> &src, vector<Num> &dst)
 {
     dst.clear();
-    for (int i : src)
+    for (const Num &i : src)
     {
         dst.push_back(i);
     }
@@ -169,13 +188,17 @@ int main()
     cout << "Start\n\n";
 
     // init
-    vector<int> cands;
+    vector<Num> cands;
     for (int i = 0; i <= MAX; i++)
-        cands.push_back(i);
+    {
+        Num n = toNum(i);
+        if (n.valid())
+            cands.push_back(n);
+    }
 
     while (true)
     {
-        vector<int> empty;
+        vector<Num> empty;
         candidate(cands, empty);
         cp(empty, cands);
         // cout << "Estimate: " << estimate(cands) << endl;
