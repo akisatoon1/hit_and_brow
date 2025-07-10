@@ -10,17 +10,17 @@ Num::Num(int n)
 Num::Num(int d1_, int d2_, int d3_)
     : d1(d1_), d2(d2_), d3(d3_) {}
 
-// いずれかの桁が等しいか判定
-bool Num::or_equal() const {
-    return (d1 == d2 || d2 == d3 || d3 == d1);
-}
-
 // 3桁の数字として有効か判定
 bool Num::valid() const {
+    // 各桁が0-9の範囲であることを確認
     bool c1 = (0 <= d1 && d1 <= 9);
     bool c2 = (0 <= d2 && d2 <= 9);
     bool c3 = (0 <= d3 && d3 <= 9);
-    return c1 && c2 && c3 && !or_equal();
+
+    // それぞれの桁が異なることを確認
+    bool c4 = !(d1 == d2 || d2 == d3 || d3 == d1);
+
+    return c1 && c2 && c3 && c4;
 }
 
 // guessとの位置一致数（ヒット数）

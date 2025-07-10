@@ -12,7 +12,6 @@ struct Num {
     Num(int d1, int d2, int d3); ///< 各桁から初期化
 
     // メンバ関数
-    bool or_equal() const;         ///< いずれかの桁が等しいか
     bool valid() const;            ///< 有効な3桁か
     int hit(const Num &guess) const;   ///< ヒット数
     int brow(const Num &guess) const;  ///< ブロー数
