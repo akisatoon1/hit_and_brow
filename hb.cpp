@@ -48,7 +48,7 @@ start:
 
     // gather candidates
     for (const Num &i : cand)
-        if (c.filter(i))
+        if (c.match(i))
             newCand.push_back(i);
 
     cout << "Candidates:\n";

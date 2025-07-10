@@ -28,8 +28,8 @@ struct Cond
     Cond(const Num &guess, int hit, int brow);
 
     // メンバ関数
-    bool valid() const;              ///< hit, browが有効範囲か
-    bool filter(const Num &n) const; ///< この条件でnが成立するか
+    bool valid() const;             ///< hit, browが有効範囲か
+    bool match(const Num &n) const; ///< この条件でnが成立するか
 };
 
 // 出力用ストリーム演算子

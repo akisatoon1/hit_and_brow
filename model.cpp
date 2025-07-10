@@ -74,7 +74,7 @@ bool Cond::valid() const
 }
 
 // nがこの条件(guess, hit, brow)を満たすか判定
-bool Cond::filter(const Num &n) const
+bool Cond::match(const Num &n) const
 {
     if (!guess.valid())
         return false;
