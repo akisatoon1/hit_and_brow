@@ -6,34 +6,12 @@ using namespace std;
 
 #define MAX 999
 
-
-// toNumの代わりにNum(int n)コンストラクタを利用
-
-int toInt(const Num &num)
-{
-    return num.d1 * 100 + num.d2 * 10 + num.d3;
-}
-
-
-// newCondの代わりにCond(Num, int, int)コンストラクタを利用
-
-bool filter(const Num &n, Cond c)
-{
-    Num g = c.guess;
-    if (!g.valid())
-        return false;
-
-    bool b1 = (c.hit == n.hit(g));
-    bool b2 = (c.brow == n.brow(g));
-    return b1 && b2;
-}
-
 void print(const vector<Num> &nums)
 {
     int n = nums.size();
     for (int i = 0; i < n; i++)
     {
-        cout << toInt(nums[i]) << ",";
+        cout << nums[i].toInt() << ",";
     }
 }
 
@@ -58,7 +36,7 @@ start:
 
     // gather candidates
     for (const Num &i : cand)
-        if (filter(i, c))
+        if (c.filter(i))
             newCand.push_back(i);
 
     cout << "Candidates:\n";
