@@ -1,12 +1,13 @@
 #include <iostream>
 #include <vector>
+#include <limits>
 #include "model.h"
 
 using namespace std;
 
 #define MAX 999
 
-void print(const vector<Num> &nums)
+void print_nums(const vector<Num> &nums)
 {
     for (Num n : nums)
     {
@@ -19,11 +20,17 @@ void candidate(const vector<Num> &cand, vector<Num> &newCand)
 start:
 
     cout << "please input:\n";
-    cout << "format: 'guess hit brow'\n";
+    cout << "format: 'guess_num hit_num brow_num'\n";
 
     int g, h, b;
     cin >> g >> h >> b;
-
+    if (cin.fail())
+    {
+        cout << "please input integers.\n\n";
+        cin.clear();                                         // エラー状態をクリア
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // 入力バッファを捨てる
+        goto start;
+    }
 
     Num guess(g);
     if (!guess.valid())
@@ -31,7 +38,13 @@ start:
         cout << "invalid guess format.\n\n";
         goto start;
     }
+
     Cond c(guess, h, b);
+    if (!c.valid())
+    {
+        cout << "invalid condition.\n\n";
+        goto start;
+    }
 
     // gather candidates
     for (const Num &i : cand)
@@ -39,7 +52,7 @@ start:
             newCand.push_back(i);
 
     cout << "Candidates:\n";
-    print(newCand);
+    print_nums(newCand);
     cout << "\n\n";
 }
 
