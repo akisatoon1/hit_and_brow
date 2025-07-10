@@ -8,10 +8,9 @@ using namespace std;
 
 void print(const vector<Num> &nums)
 {
-    int n = nums.size();
-    for (int i = 0; i < n; i++)
+    for (Num n : nums)
     {
-        cout << nums[i].toInt() << ",";
+        cout << n << ",";
     }
 }
 

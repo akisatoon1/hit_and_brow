@@ -41,16 +41,19 @@ int Num::brow(const Num &guess) const {
     return cnt;
 }
 
-// 3桁の整数値に変換
-int Num::toInt() const {
-    return d1 * 100 + d2 * 10 + d3;
-}
-
 // ==================== Cond ====================
 
 // guess, hit, browを指定するコンストラクタ
 Cond::Cond(const Num& guess_, int hit_, int brow_)
     : guess(guess_), hit(hit_), brow(brow_) {}
+
+// 出力用ストリーム演算子
+std::ostream& operator<<(std::ostream& out, const Num& num) {
+    out << num.d1
+        << num.d2
+        << num.d3;
+    return out;
+}
 
 // hit, browが有効範囲か判定
 bool Cond::valid() const {

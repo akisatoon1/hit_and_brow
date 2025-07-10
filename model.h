@@ -1,6 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include <iostream>
 
 // ==================== Num ====================
 struct Num {
@@ -15,7 +16,6 @@ struct Num {
     bool valid() const;            ///< 有効な3桁か
     int hit(const Num &guess) const;   ///< ヒット数
     int brow(const Num &guess) const;  ///< ブロー数
-    int toInt() const;             ///< 3桁の整数値に変換
 };
 
 
@@ -31,5 +31,8 @@ struct Cond {
     bool valid() const; ///< hit, browが有効範囲か
     bool filter(const Num& n) const; ///< この条件でnが成立するか
 };
+
+// 出力用ストリーム演算子
+std::ostream& operator<<(std::ostream& os, const Num& num);
 
 #endif // MODEL_H
